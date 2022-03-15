@@ -22,7 +22,6 @@ From dpkg manpage.
 In defaults/main.yml you can choose version.
 ```
 debian_release: bullseye
-debian_version_number: 11
 ````
 
 
