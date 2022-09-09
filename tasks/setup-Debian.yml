@@ -7,6 +7,64 @@
       - apt-transport-https
     update_cache: yes
 
+- name: sudoers file
+  get_url:
+    url: https://raw.githubusercontent.com/habbis/sudoers/master/admins
+    dest: /etc/sudoers.d/
+    mode: '0440'
+
+- name: Download sshd_config from git repo
+  get_url:
+    url: https://repo01.no.habbfarm.net/habbfarm/openssh_config/raw/branch/main/pve_sshd_config
+    dest: /etc/ssh/sshd_config
+    mode: '0744'
+
+- name: add right sftp server for rhel/centos in sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '/usr/lib/openssh/sftp-server'
+    line: "Subsystem  sftp /usr/libexec/openssh/sftp-server"
+  when: ( ansible_os_family == 'RedHat' or ansible_pkg_mgr == "dnf" or ansible_pkg_mgr == "yum" )
+
+- name: add group admins for nopasswd sudo
+  group:
+    name: admins
+    state: present
+
+- name: add user called user with sudo right
+  user:
+    name: ansible
+    shell: /bin/bash
+    groups: admins
+    append: yes
+    
+- name: set authorized keys from gitea server
+  authorized_key:
+    user: root
+    state: present
+    key: https://repo01.no.habbfarm.net/habbfarm/habbfarm_authorized_keys/raw/branch/master/authorized_keys.keys
+    path: /root/.ssh/authorized_keys2
+  #ignore_errors: yes
+  
+- name: set authorized keys from gitea server
+  authorized_key:
+    user: ansible
+    state: present
+    key: https://repo01.no.habbfarm.net/habbfarm/habbfarm_authorized_keys/raw/branch/master/authorized_keys.keys
+    path: /home/ansible/.ssh/authorized_keys2
+  #ignore_errors: yes
+  
+- name: reload sshd
+  service:
+    name: sshd
+    state: restarted
+
+- name: Add proxmox gpg key
+  ansible.builtin.apt_key:
+    url: https://enterprise.proxmox.com/debian/proxmox-release-bullseye.gpg
+    dest: /etc/apt/trusted.gpg.d/proxmox-release-bullseye.gpg
+    state: present
+
 - name: remove old repos
   ansible.builtin.file:
     path: /etc/apt/sources.list.d
@@ -38,18 +96,11 @@
     mode: '0644'
   when: (ansible_distribution == "Debian")
 
-- name: apt update to get new package for dist-upgrade
+- name: Install proxmox
   apt:
+    pkg:
+      - xinetd
+      - proxmox-ve 
+      - postfix 
+      - open-iscsi
     update_cache: yes
-
-- name: set env noninteractive
-  shell: env DEBIAN_FRONTEND=noninteractive
-
-- name: set env apt list changes to mail
-  shell: env APT_LISTCHANGES_FRONTEND=mail
-
-- name: upgrade to "{{ debian_release }}"
-  apt:
-    upgrade: dist
-    update_cache: yes
-    dpkg_options: 'force-confdef,force-confold'

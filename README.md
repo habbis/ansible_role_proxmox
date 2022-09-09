@@ -1,8 +1,8 @@
-ansible_role_autoProxmoxUpgrade
+ansible_role_proxmox
 =========
 
 
-[![CI](https://github.com/habbis/ansible_role_autoProxmoxUpgrade/workflows/CI/badge.svg)](https://github.com/habbis/ansible_role_autoProxmoxUpgrade/actions?query=workflow%3ACI)
+[![CI](https://github.com/habbis/ansible_role_proxmox/workflows/CI/badge.svg)](https://github.com/habbis/ansible_role_proxmox/actions?query=workflow%3ACI)
 
 This role upgrade debian to new release and does not change config file and also upgrad to new proxmox version.
 
@@ -55,5 +55,5 @@ Example site.yml
     #-  defaults/secrets.yml
 
   roles:
-    - { role: ../ansible_role_autoProxmoxUpgrade }
+    - { role: ../ansible_role_proxmox }
 ```

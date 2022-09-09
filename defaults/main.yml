@@ -1,6 +1,5 @@
 ---
 # variables
-# debian version to upgrade to
-#debian_release: buster
-#debian_version_number: 10
-debian_release: bullseye
+# debian version to install
+#debian_release: bullseye
+debian_release: buster
