@@ -1,5 +1,5 @@
 ---
 # variables
 # debian version to install
-#debian_release: bullseye
-debian_release: buster
+#debian_release: buster
+debian_release: bullseye
