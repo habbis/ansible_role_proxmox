@@ -37,7 +37,7 @@
     shell: /bin/bash
     groups: admins
     append: yes
-    
+
 - name: set authorized keys from gitea server
   authorized_key:
     user: root
@@ -45,7 +45,7 @@
     key: https://repo01.no.habbfarm.net/habbfarm/habbfarm_authorized_keys/raw/branch/master/authorized_keys.keys
     path: /root/.ssh/authorized_keys2
   #ignore_errors: yes
-  
+
 - name: set authorized keys from gitea server
   authorized_key:
     user: ansible
@@ -53,7 +53,7 @@
     key: https://repo01.no.habbfarm.net/habbfarm/habbfarm_authorized_keys/raw/branch/master/authorized_keys.keys
     path: /home/ansible/.ssh/authorized_keys2
   #ignore_errors: yes
-  
+
 - name: reload sshd
   service:
     name: sshd
@@ -100,7 +100,7 @@
   apt:
     pkg:
       - xinetd
-      - proxmox-ve 
-      - postfix 
+      - proxmox-ve
+      - postfix
       - open-iscsi
     update_cache: yes
