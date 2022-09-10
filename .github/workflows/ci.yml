@@ -44,7 +44,8 @@ jobs:
           #- rockylinux8
           #- ubi8
           #- ubuntu2004
-          - debian10
+          #- debian10
+          - debian11
 
     steps:
       - name: Check out the codebase.
